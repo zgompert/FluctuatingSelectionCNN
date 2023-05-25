@@ -2,19 +2,20 @@
 
 ### Constant Selection ###
 ## Set parameters
-
+Constant_Selection <- function(populations = 10, generations = 10, popsize = 200,
+                               samplesize = 30, h = 0.5, s = runif(1, -0.2, 0.2)) {
 # population number
-nPol <- 10
+nPol <- populations
 # number of generations
-nGen <- 10
+nGen <- generations
 # population size
-popSize <- 200
+popSize <- popsize
 # sample size between generations
-sampleSize <- 30
+sampleSize <- samplesize
 # heterozygous effect
-h <- 0.5
+h <- h
 #selection coefficient
-s <- 0.1
+s <- s
 
 # Initialize the matrix
 evoSim <- matrix(NA, nrow = nGen, ncol = 2*nPol)
@@ -25,7 +26,6 @@ envCol <- seq(from = 2, to = 20, by = 2)
 # fill in row one with starting allele frequency and environmental data
 evoSim[1, popCol] <- 0.5
 
-selCof <- seq(from = -0.2, to = 0.2, by = 0.01)
 
 
 ## Simulation
@@ -41,24 +41,27 @@ for (pop in popCol) { #repeat the loop for each population
 
 for (env in envCol) {
   for (gen in 1:nGen) {
-    evoSim[gen, env] <- sample(selCof, 1) #generate environmental "white noise"
+    evoSim[gen, env] <- runif(1, -0.4, 0.4)  #generate environmental "white noise"
   }
 }
-
+return(evoSim)
+}
+evoSim <- Constant_Selection()
 
 ### Fluctuating Selection ###
 ## Set parameters
-
+Fluctuating_Selection <- function(populations = 10, generations = 10, popsize = 200,
+                                  samplesize = 30, h = 0.5){
 # population number
-nPol <- 10
+nPol <- populations
 # number of generations
-nGen <- 10
+nGen <- generations
 # population size
-popSize <- 200
+popSize <- popsize
 # sample size between generations
-sampleSize <- 30
+sampleSize <- samplesize
 # heterozygous effect
-h <- 0.5
+h <- h
 
 # Initialize the matrix
 evoSim <- matrix(NA, nrow = nGen, ncol = 2*nPol)
@@ -70,7 +73,6 @@ envCol <- seq(from = 2, to = 20, by = 2)
 evoSim[1, popCol] <- 0.5
 
 # selection coefficient possibilities
-selCof <- seq(from = -0.2, to = 0.2, by = 0.01)
 
 
 
@@ -78,19 +80,28 @@ selCof <- seq(from = -0.2, to = 0.2, by = 0.01)
 
 for (env in envCol) {
   for (gen in 1:nGen) {
-    evoSim[gen, env] <- sample(selCof, 1)
+    evoSim[gen, env] <- runif(1, -0.4, 0.4)
   }
 }
 
 for (pop in popCol){
-  for (gen in 2:nGen) {
-    s <- evoSim[gen - 1, pop + 1] #set selection equal to the environmental data from the previous generation
+  for (gen in 2:nGen) { #set selection equal to a function of environmental data from the previous generation
+    s <- (runif(1, -0.1, 0.1) +
+         (runif(1, 0.25, 0.7)*(evoSim[gen - 1, pop + 1])))
     freq <-  evoSim[gen - 1 , pop] #save the allele frequency for the previous generation
     expectedFreq <- (freq + (s*freq)*(1 - freq)*(freq + h*(1-2*freq))) #calculate expected frequency
     newFreq <- rbinom(1, (2*sampleSize), expectedFreq)/(2*sampleSize) #genetic drift
     evoSim[gen, pop] <- newFreq
   }
 }
-
-print(evoSim)
-print("Hello")
+}
+#generate 5000 data sets for constant selection
+for (i in 1:5000){
+  data <- Constant_Selection()
+  write.csv(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type1DataSet_", i,".csv"))
+}
+#generate 5000 data sets for fluctuating selection
+for (i in 1:5000){
+  data <- Fluctuating_Selection()
+  write.csv(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type2DataSet_", i,".csv"))
+}

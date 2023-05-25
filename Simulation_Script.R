@@ -91,3 +91,6 @@ for (pop in popCol){
     evoSim[gen, pop] <- newFreq
   }
 }
+
+print(evoSim)
+print("Hello")

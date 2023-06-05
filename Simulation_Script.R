@@ -41,7 +41,7 @@ for (pop in popCol) { #repeat the loop for each population
 
 for (env in envCol) {
   for (gen in 1:nGen) {
-    evoSim[gen, env] <- runif(1, -0.4, 0.4)  #generate environmental "white noise"
+    evoSim[gen, env] <- runif(1, 0, 1)  #generate environmental "white noise"
   }
 }
 return(evoSim)
@@ -80,7 +80,7 @@ evoSim[1, popCol] <- 0.5
 
 for (env in envCol) {
   for (gen in 1:nGen) {
-    evoSim[gen, env] <- runif(1, -0.4, 0.4)
+    evoSim[gen, env] <- runif(1, 0, 1)
   }
 }
 
@@ -94,6 +94,7 @@ for (pop in popCol){
     evoSim[gen, pop] <- newFreq
   }
 }
+return(evoSim)
 }
 #generate 5000 data sets for constant selection
 for (i in 1:5000){
@@ -105,3 +106,5 @@ for (i in 1:5000){
   data <- Fluctuating_Selection()
   write.csv(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type2DataSet_", i,".csv"))
 }
+
+print(Fluctuating_Selection())

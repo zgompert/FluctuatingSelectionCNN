@@ -86,14 +86,16 @@ for (env in envCol) {
 
 for (pop in popCol){
   for (gen in 2:nGen) { #set selection equal to a function of environmental data from the previous generation
-    s <- (runif(1, -0.1, 0.1) +
-         (runif(1, 0.25, 0.7)*(evoSim[gen - 1, pop + 1])))
+    a <- runif(1, -0.1, 0.1)
+    b <- runif(1, -0.3, 0.3)
+    s <- a + (b*(evoSim[gen - 1, pop + 1]))
     freq <-  evoSim[gen - 1 , pop] #save the allele frequency for the previous generation
     expectedFreq <- (freq + (s*freq)*(1 - freq)*(freq + h*(1-2*freq))) #calculate expected frequency
     newFreq <- rbinom(1, (2*sampleSize), expectedFreq)/(2*sampleSize) #genetic drift
     evoSim[gen, pop] <- newFreq
   }
 }
+
 return(evoSim)
 }
 #generate 5000 data sets for constant selection
@@ -107,4 +109,5 @@ for (i in 1:5000){
   write.csv(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type2DataSet_", i,".csv"))
 }
 
-print(Fluctuating_Selection())
+
+

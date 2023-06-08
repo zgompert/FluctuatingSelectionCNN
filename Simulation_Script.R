@@ -89,7 +89,7 @@ b <- runif(1, -0.3, 0.3)
 
 for (pop in popCol){
   for (gen in 2:nGen) { #set selection equal to a function of environmental data from the previous generation
-    s <- a + (b*(evoSim[gen - 1, pop + 1]))
+    s <- a + (b*((evoSim[gen - 1, pop + 1]) -0.5 ))
     freq <-  evoSim[gen - 1 , pop] #save the allele frequency for the previous generation
     expectedFreq <- (freq + (s*freq)*(1 - freq)*(freq + h*(1-2*freq))) #calculate expected frequency
     newFreq <- rbinom(1, (2*sampleSize), expectedFreq)/(2*sampleSize) #genetic drift
@@ -102,15 +102,17 @@ return(evoSim)
 #generate 5000 data sets for constant selection
 for (i in 1:5000){
   data <- Constant_Selection()
-  write.csv(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type1DataSet_", i,".csv"),
+  write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type1DataSet_", i,".csv"),
             col.names = F, row.names = F)
 }
 #generate 5000 data sets for fluctuating selection
 for (i in 1:5000){
   data <- Fluctuating_Selection()
-  write.csv(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type2DataSet_", i,".csv"),
+  write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type2DataSet_", i,".csv"),
             col.names = F, row.names = F)
 }
 
+
+warnings()
 
 

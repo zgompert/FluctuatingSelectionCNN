@@ -48,7 +48,7 @@ Sim <- function(populations = 10, generations = 11, p0 = 0.5, popsize = 200,
         ## sample size perturbs allele frequences from true values
         evoSim[,pop]<-rbinom(nGen,(2*samplesize),evoSim[,pop])/(2*samplesize)
         ## arcsine square root transformation
-        evoSim[,pop]<-2 * asin(sqrt(evoSim[,pop]))
+        ## evoSim[,pop]<-2 * asin(sqrt(evoSim[,pop]))
     }
     
 
@@ -62,8 +62,12 @@ Sim <- function(populations = 10, generations = 11, p0 = 0.5, popsize = 200,
     }
 
     for (pop in popCol){
-        for (gen in 1:nGen-1){ ## pi is range of p, so 2 pi is range of delta p
-            evoSimNew[gen, pop] <- (evoSim[gen + 1, pop] - evoSim[gen, pop])/(2*pi) + .5 
+        for (gen in 1:nGen-1){ 
+            ## pi is range of p, so 2 pi is range of delta p
+            ##evoSimNew[gen, pop] <- (evoSim[gen + 1, pop] - evoSim[gen, pop])/(2*pi) + .5 
+            ## SD standardize and scale to 0 to 1 
+            evoSimNew[gen, pop] <- (evoSim[gen + 1, pop] - evoSim[gen, pop])/sqrt(evoSim[gen, pop] * (1-evoSim[gen, pop]))
+            evoSimNew[gen, pop] <- (evoSimNew[gen, pop] + 1)/2
         }
     }
 

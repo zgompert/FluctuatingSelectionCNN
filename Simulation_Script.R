@@ -2,7 +2,7 @@
 
 ### Constant Selection ###
 ## Set parameters
-Constant_Selection <- function(populations = 10, generations = 10, popsize = 200,
+Constant_Selection <- function(populations = 10, generations = 11, popsize = 200,
                                samplesize = 30, h = 0.5, s = runif(1, -0.2, 0.2)) {
 # population number
 nPol <- populations
@@ -21,8 +21,8 @@ s <- s
 evoSim <- matrix(NA, nrow = nGen, ncol = 2*nPol)
 # create a vector of odd numbers (for populations) and even numbers
 # (environmental data)
-popCol <- seq(from = 1, to = 19, by = 2)
-envCol <- seq(from = 2, to = 20, by = 2)
+popCol <- seq(from = 1, to = 2*nPol - 1, by = 2)
+envCol <- seq(from = 2, to = 2*nPol, by = 2)
 # fill in row one with starting allele frequency and environmental data
 evoSim[1, popCol] <- 0.5
 
@@ -44,13 +44,29 @@ for (env in envCol) {
     evoSim[gen, env] <- runif(1, 0, 1)  #generate environmental "white noise"
   }
 }
-return(evoSim)
+evoSimNew <- matrix(NA, nrow = nGen - 1, ncol = 2*nPol)
+
+for (env in envCol) {
+  for (gen in 1:nGen - 1) {
+    evoSimNew[gen, env] <- evoSim[gen, env]
+  }
 }
+
+
+for (pop in popCol){
+  for (gen in 1:nGen-1){
+    evoSimNew[gen, pop] <- (evoSim[gen + 1, pop]) - evoSim[gen, pop]
+  }
+}
+
+return(evoSimNew)
+}
+
 evoSim <- Constant_Selection()
 
 ### Fluctuating Selection ###
 ## Set parameters
-Fluctuating_Selection <- function(populations = 10, generations = 10, popsize = 200,
+Fluctuating_Selection <- function(populations = 10, generations = 11, popsize = 200,
                                   samplesize = 30, h = 0.5){
 # population number
 nPol <- populations
@@ -67,8 +83,8 @@ h <- h
 evoSim <- matrix(NA, nrow = nGen, ncol = 2*nPol)
 # create a vector of odd numbers (for populations) and even numbers
 # (environmental data)
-popCol <- seq(from = 1, to = 19, by = 2)
-envCol <- seq(from = 2, to = 20, by = 2)
+popCol <- seq(from = 1, to = 2*nPol - 1, by = 2)
+envCol <- seq(from = 2, to = 2*nPol, by = 2)
 # fill in row one with starting allele frequency and environmental data
 evoSim[1, popCol] <- 0.5
 
@@ -97,22 +113,36 @@ for (pop in popCol){
   }
 }
 
-return(evoSim)
+evoSimNew <- matrix(NA, nrow = nGen - 1, ncol = 2*nPol)
+
+for (env in envCol) {
+  for (gen in 1:nGen - 1) {
+    evoSimNew[gen, env] <- evoSim[gen, env]
+  }
+}
+
+
+for (pop in popCol){
+  for (gen in 1:nGen-1){
+    evoSimNew[gen, pop] <- (evoSim[gen + 1, pop]) - evoSim[gen, pop]
+  }
+}
+
+return(evoSimNew)
 }
 #generate 5000 data sets for constant selection
 for (i in 1:5000){
   data <- Constant_Selection()
-  write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type1DataSet_", i,".csv"),
+  write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/NewType1DataSet_", i,".csv"),
             col.names = F, row.names = F)
 }
 #generate 5000 data sets for fluctuating selection
 for (i in 1:5000){
   data <- Fluctuating_Selection()
-  write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/Type2DataSet_", i,".csv"),
+  write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/NewType2DataSet_", i,".csv"),
             col.names = F, row.names = F)
 }
 
 
-warnings()
-
-
+evo <- Fluctuating_Selection()
+evo

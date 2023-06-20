@@ -75,7 +75,7 @@ Sim <- function(populations = 10, generations = 11, p0 = 0.5, popsize = 200,
 }
 #generate 5000 data sets for strong, constant selection, samples a ~ +- .2
 for (i in 1:5000){
-  data <- Sim(10,11,0.5,popsize=200,samplesize=200,h=0.5,a=rbeta(1,5,45)*sample(c(-1,1),1),b=0)
+  data <- Sim(10,11,0.5,popsize=200,samplesize=200,h=0.5,a=rbeta(1,10,40)*sample(c(-1,1),1),b=0)
   write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/NewType1DataSet_", i,".csv"),
             col.names = F, row.names = F)
 }

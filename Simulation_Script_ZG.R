@@ -17,6 +17,7 @@ Sim <- function(populations = 10, generations = 11, p0 = 0.5, popsize = 200,
     # number of generations
     nGen <- generations
 
+    cat("a =",a,";b = ",b,"\n")
 
     # Initialize the matrix
     evoSim <- matrix(NA, nrow = nGen, ncol = 2*nPol)
@@ -40,15 +41,18 @@ Sim <- function(populations = 10, generations = 11, p0 = 0.5, popsize = 200,
         for (gen in 2:nGen) { #set selection equal to a function of environmental data from the previous generation
             s <- a + (b*((evoSim[gen - 1, pop + 1]) -0.5 ))## center environment for simulations
             freq <-  evoSim[gen - 1 , pop] #save the allele frequency for the previous generation
-            expectedFreq <- (freq + (s*freq)*(1 - freq)*(freq + h*(1-2*freq))) #calculate expected frequency
+            expectedFreq <- freq + (s*freq*(1 - freq)*(freq + h*(1-2*freq))) #calculate expected frequency
             newFreq <- rbinom(1, (2*popsize), expectedFreq)/(2*popsize) #genetic drift based on population size
             evoSim[gen, pop] <- newFreq
         }
         ## sample size perturbs allele frequences from true values
         evoSim[,pop]<-rbinom(nGen,(2*samplesize),evoSim[,pop])/(2*samplesize)
+        ## arcsine square root transformation
+        evoSim[,pop]<-2 * asin(sqrt(evoSim[,pop]))
     }
+    
 
-    ## recode as change in p
+    ## recode as change in p, but scaled to be between 0, and 1
     evoSimNew <- matrix(NA, nrow = nGen - 1, ncol = 2*nPol)
 
     for (env in envCol) {
@@ -58,8 +62,8 @@ Sim <- function(populations = 10, generations = 11, p0 = 0.5, popsize = 200,
     }
 
     for (pop in popCol){
-        for (gen in 1:nGen-1){
-            evoSimNew[gen, pop] <- (evoSim[gen + 1, pop]) - evoSim[gen, pop]
+        for (gen in 1:nGen-1){ ## pi is range of p, so 2 pi is range of delta p
+            evoSimNew[gen, pop] <- (evoSim[gen + 1, pop] - evoSim[gen, pop])/(2*pi) + .5 
         }
     }
 
@@ -83,5 +87,4 @@ for (i in 1:5000){
   write.table(data, paste0("/uufs/chpc.utah.edu/common/home/gompert-group4/projects/fluctCNN/CNNTrainingData/NewType3DataSet_", i,".csv"),
             col.names = F, row.names = F)
 }
-
 

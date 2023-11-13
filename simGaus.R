@@ -2,10 +2,10 @@
 ## approximaint a linear model for S
 
 ## read in genarch 1 initial conditions
-p0<-read.table("sim_p0.txt",skip=1,header=FALSE)
+#p0<-read.table("sim_p0.txt",skip=1,header=FALSE)
 trg<-read.table("sim_trait_1.txt",skip=1,header=FALSE)
-ne<-read.table("sim_ne.txt",skip=1,header=FALSE)
-env<-read.table("sim_env.txt",skip=1,header=FALSE)
+#ne<-read.table("sim_ne.txt",skip=1,header=FALSE)
+#env<-read.table("sim_env.txt",skip=1,header=FALSE)
 
 ## row = sim no., col = alpha, beta, mean and SD S, mean and SD |si]
 params<-matrix(NA,nrow=40*2,ncol=6)

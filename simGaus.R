@@ -3,17 +3,17 @@
 
 ## read in genarch 1 initial conditions
 #p0<-read.table("sim_p0.txt",skip=1,header=FALSE)
-trg<-read.table("sim_trait_1.txt",skip=1,header=FALSE)
+trg<-read.table("sim_trait_1.txt",header=FALSE)
 #ne<-read.table("sim_ne.txt",skip=1,header=FALSE)
 #env<-read.table("sim_env.txt",skip=1,header=FALSE)
 
 ## row = sim no., col = alpha, beta, mean and SD S, mean and SD |si]
-params<-matrix(NA,nrow=40*2,ncol=6)
+#params<-matrix(NA,nrow=40*2,ncol=6)
 ## row = sim no., col=sum change, cov. change by env
 ss<-matrix(NA,nrow=40*2,ncol=2)
 N<-1000
 Npop<-10
-Ngen<-10
+Ngen<-11
 Nsnp<-100
 
 ## sd of fitness function
@@ -21,6 +21,7 @@ Nsnp<-100
 w<-c(2,5)
 aGaus<-c(rep(sum(2*trg[,2]*p0[,1]),20),rep(sum(2*trg[,2]*p0[,1]),20)+.2)
 bGaus<-rep(rep(c(0,.4),each=10),2)
+
 
 for(sel in 1:2){
 	for(x in 1:40){
@@ -64,24 +65,23 @@ for(sel in 1:2){
 			## calculate si
 			si[k-1,j,]<-trg[,2] * as.numeric(S[k-1,j]/var(ph))
 			## calculate dp for bv
-			dp[k-1,j]<-2 * sum((p1-p) * trg[,2])
+			dp[k-1,j]<-2 * sum((p1) * trg[,2])
 			p<-p1
 		}
 	}
 
-	oo<-lm(as.numeric(S)~as.numeric(as.matrix(env)))
-	idx<-x + 40 * (sel-1)
+	#oo<-lm(as.numeric(S)~as.numeric(as.matrix(env)))
+	#idx<-x + 40 * (sel-1)
 
-	params[idx,1:2]<-oo$coefficients
-	params[idx,3]<-mean(as.numeric(S))
-	params[idx,4]<-sd(as.numeric(S))
-	params[idx,5]<-mean(abs(as.vector(si)))
-	params[idx,6]<-sd(abs(as.vector(si)))
+	#params[idx,1:2]<-oo$coefficients
+	#params[idx,3]<-mean(as.numeric(S))
+	#params[idx,4]<-sd(as.numeric(S))
+	#params[idx,5]<-mean(abs(as.vector(si)))
+	#params[idx,6]<-sd(abs(as.vector(si)))
 
-	ss[idx,1]<-sum(as.vector(dp))
-	ss[idx,2]<-cov(as.vector(dp),as.vector(as.matrix(env)))
+	#ss[idx,1]<-sum(as.vector(dp))
+	#ss[idx,2]<-cov(as.vector(dp),as.vector(as.matrix(env)))
 }}
 
-write.table(round(params,5),file="gausParams.txt",row.names=FALSE,col.names=FALSE,quote=FALSE)
-write.table(round(ss,5),file="gausSs.txt",row.names=FALSE,col.names=FALSE,quote=FALSE)
+
 

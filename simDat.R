@@ -3,7 +3,7 @@
 
 L<-100 ## 100 snps
 N<-10 ## 10 pops.
-G<-10 ## 10 gens
+G<-11 ## 10 gens
 
 ## sample p from beta, assumes no population structure
 p<-rbeta(L,.5,.5)

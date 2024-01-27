@@ -125,6 +125,7 @@ for (i in 1:2){
   environmentMatrix <- data$EnvMatNew
   alleleFrequencyMatrix <- data$FreqMatNew
   AllelFreqDiffMatrix<-calc_AllelFreqDiffMatrix(alleleFrequencyMatrix)
+  
   # Write matrices to CSV files
   write.table(environmentMatrix, paste0("environment_matrix_Type1_", i, ".csv"), col.names = F, row.names = F,sep = ",")
   write.table(alleleFrequencyMatrix, paste0("allele_frequency_matrix_Type1_", i, ".csv"), col.names = F, row.names = F,sep = ",")
@@ -136,6 +137,7 @@ for (i in 1:5000){
   data <- Sim(10,11,10,0.5,popsize=200,samplesize=200,h=0.5,a=0,b=rbeta(1,15,35)*sample(c(-1,1),1))
   environmentMatrix <- data$EnvMatNew
   alleleFrequencyMatrix <- data$FreqMatNew
+  AllelFreqDiffMatrix<-calc_AllelFreqDiffMatrix(alleleFrequencyMatrix)
   
   # Write matrices to CSV files
   write.table(environmentMatrix, paste0("environment_matrix_Type2_", i, ".csv"), col.names = F, row.names = F,sep = ",")
@@ -147,10 +149,10 @@ for (i in 1:5000){
   data <- Sim(10,11,10,0.5,popsize=200,samplesize=200,h=0.5,a=0,b=0)
   environmentMatrix <- data$EnvMatNew
   alleleFrequencyMatrix <- data$FreqMatNew
+  AllelFreqDiffMatrix<-calc_AllelFreqDiffMatrix(alleleFrequencyMatrix)
   
   # Write matrices to CSV files
   write.table(environmentMatrix, paste0("environment_matrix_Type3_", i, ".csv"), col.names = F, row.names = F,sep = ",")
   write.table(alleleFrequencyMatrix, paste0("allele_frequency_matrix_Type3_", i, ".csv"), col.names = F, row.names = F,sep = ",")
   write.table(AllelFreqDiffMatrix, paste0("DIFF_allele_frequency_matrix_Type3_", i, ".csv"), col.names = F, row.names = F,sep = ",")
 }
-

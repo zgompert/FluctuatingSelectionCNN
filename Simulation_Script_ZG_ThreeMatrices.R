@@ -115,17 +115,16 @@ Sim <- function(populations = 10, generations = 11, environments =10, p0 = runif
     }
   }
   return(list(EnvMatNew = EnvMatNew, FreqMatNew = FreqMatNew))
-  AllelFreqDiffMatrix<-calc_AllelFreqDiffMatrix(FreqMatNew)
 }
 #######################################################################################################################################################
 
 
 #generate 5000 data sets for strong, constant selection, samples a ~ +- .2
-for (i in 1:5000){
+for (i in 1:2){
   data <- Sim(10,11,10,0.5,popsize=200,samplesize=200,h=0.5,a=rbeta(1,10,40)*sample(c(-1,1),1),b=0)
   environmentMatrix <- data$EnvMatNew
   alleleFrequencyMatrix <- data$FreqMatNew
-  
+  AllelFreqDiffMatrix<-calc_AllelFreqDiffMatrix(alleleFrequencyMatrix)
   # Write matrices to CSV files
   write.table(environmentMatrix, paste0("environment_matrix_Type1_", i, ".csv"), col.names = F, row.names = F,sep = ",")
   write.table(alleleFrequencyMatrix, paste0("allele_frequency_matrix_Type1_", i, ".csv"), col.names = F, row.names = F,sep = ",")
